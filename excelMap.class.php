@@ -1,5 +1,5 @@
 <?php
-/**
+/** 
  * Excel Map is a tool to parse and look up values from an excel sheet
  * @package excel2JSON
  * @license http://www.apache.org/licenses/LICENSE-2.0

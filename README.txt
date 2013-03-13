@@ -1,4 +1,4 @@
-# Excel2JSON is an Excel XML parser to JSON document
+# Excel2JSON is an Excel XML parser to JSON document 
 
 This class will allow you to use your excel workbook data in your Javascript/jQuery and other web applications. 
 It's really simple to use, you can instantiate the class with the excel file you want to read, the file must 
