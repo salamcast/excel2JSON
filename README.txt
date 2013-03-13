@@ -1,4 +1,4 @@
-# excel2JSON is an Excel XML parser to JSON document
+# Excel2JSON is an Excel XML parser to JSON document
 
 This class will allow you to use your excel workbook data in your Javascript/jQuery and other web applications. 
 It's really simple to use, you can instantiate the class with the excel file you want to read, the file must 
@@ -26,13 +26,13 @@ other wise use
 
 value dump - test.php => dumps class values 
 
-### show how to use excel data without JSON print out  
+### Show how to use excel data without JSON print out  
 - $e->filter_cells()
 - $e->filter_data()
 
 ***
 
-### sheets test - print_sheets.php => on by default if worksheet not found or set.  
+### Sheets test - print_sheets.php => on by default if worksheet not found or set.  
 
 Prints out a JSON document of a list of excel workbook sheets
 
@@ -44,7 +44,7 @@ Prints out a JSON document of a list of excel workbook sheets
 
 ***
 
-### data test - print_sheet_data.php
+### Data test - print_sheet_data.php
 
 Prints out a JSON document of excel worksheet cell data in detail
 
@@ -58,7 +58,7 @@ Prints out a JSON document of excel worksheet cell data in detail
 
 ***
 
-### cell test - print_sheet_cells.php
+### Cell test - print_sheet_cells.php
 
 Prints out a JSON document of excel worksheet cell and their values 
 
@@ -72,7 +72,7 @@ Prints out a JSON document of excel worksheet cell and their values
 
 ***
 
-### rows test - print_sheet_rows.php
+### Rows test - print_sheet_rows.php
 
 Prints out a JSON document of excel worksheet cell and values grouped into rows 
 
@@ -86,7 +86,7 @@ Prints out a JSON document of excel worksheet cell and values grouped into rows
 
 ***
 
-### data filter test - print_filter_data.php
+### Data filter test - print_filter_data.php
 
 Prints out a JSON document of excel worksheet cell data in detail, only cells added to cell list will be displayed
 
@@ -105,7 +105,7 @@ Prints out a JSON document of excel worksheet cell data in detail, only cells ad
 
 ***
 
-### cell filter test - print_filter_cells.php
+### Cell filter test - print_filter_cells.php
 
 Prints out a JSON document of excel worksheet cell and their values, only cells added to cell list will be displayed 
 
