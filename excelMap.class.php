@@ -1,19 +1,11 @@
 <?php
-/* Demo file and sheets */
-$file='test.xlsx';
-$sheet='Filelist';
-
 /**
- * @package excel2JSON
- * @author Karl Holz
- *
  * Excel Map is a tool to parse and look up values from an excel sheet
- *  
+ * @package excel2JSON
+ * @license http://www.apache.org/licenses/LICENSE-2.0
+ * @author Karl Holz
+ * @version 1.0
  */
-
-
-
-
 class excel2JSON  { 
 
 	/**
@@ -60,7 +52,7 @@ class excel2JSON  {
 	private $loaded_workbook=FALSE;
 	
 	/**
-	 *  loaded Workbook data
+	 * Loaded Workbook data
 	 * 
 	 * @var array $loaded_workbook_data
 	 */
@@ -99,10 +91,12 @@ class excel2JSON  {
 	}
 	
 	/**
-	 * sets the excel file to use as a DB
+	 * Set Excel doc
+	 * Sets the excel file to use as a DB
 	 * file should have an xlsx or xlsm
 	 * @param file $file
 	 * @param string it's default is true, set to false if your sheet fails to load
+	 * @return boolean
 	 */
 	function set_excel($file, $t='true') { 
 		if (is_file($file)) { 
@@ -113,7 +107,6 @@ class excel2JSON  {
 			$sheets=trim(file_get_contents($this->file.'#'.$this->workbooks));
 			$wb=$this->xsl_out($this->GetWorkbooksList_xslt($t), $sheets);
 			if ($wb != '') $this->excel_sheets=parse_ini_string($wb); 
-
 			return TRUE;
 		} 
 		return FALSE; 
@@ -121,7 +114,7 @@ class excel2JSON  {
 	}
 	
 	/**
-	 * load excel sheet by name
+	 * Load Excel sheet by name
 	 * @param string $sheet
 	 * @return boolean
 	 */
@@ -135,7 +128,7 @@ class excel2JSON  {
 	}
 	
 	/**
-	 * load excel sheet data
+	 * Load Excel sheet data
 	 * @return boolean
 	 */
 	function load_sheet_data(){
@@ -170,6 +163,7 @@ class excel2JSON  {
 	
 
 	/**
+	 * Cell List
 	 * add an excel cell reference to filter list
 	 * @param string $cell
 	 */
@@ -178,10 +172,8 @@ class excel2JSON  {
 	}
 	
 	/**
-	 * print sheet cells as JSON Document
-	 *
-	 * it will basicly be { "excel cell":"excel data" }
-	 *
+	 * Print Rows
+	 * print sheet cell rows as JSON Document, it will basicly be { "excel cell":"excel data" }
 	 */
 	function print_sheet_rows() {
 		if (!$this->loaded_workbook) $this->print_sheets();
@@ -189,9 +181,8 @@ class excel2JSON  {
 	}
 	
 	/**
-	 * print sheet data as JSON Document
-	 * 
-	 * it will basicly be { "excel cell" : { "row": "row number", "val": "excel data" } }
+	 * Print Sheet
+	 * print sheet data as JSON Document, it will basicly be { "excel cell" : { "row": "row number", "val": "excel data" } }
 	 */
 	function print_sheet_data() { 
 		if (!$this->loaded_workbook) $this->print_sheets();
@@ -199,8 +190,9 @@ class excel2JSON  {
 	}
 	
 	/**
-	 * filter workbook data 
-	 * returns filter data as an array
+	 * Filter Data
+	 * Filter workbook data 
+	 * @return array filter data
 	 */
 	function filter_data() {
 		$filter=array();
@@ -210,9 +202,8 @@ class excel2JSON  {
 	
 	
 	/**
-	 * print filtered sheet cells data as JSON Document
-	 *
-	 * it will basicly be { "excel cell" : { "row": "row number", "val": "excel data" } }
+	 * Print filtered sheet
+	 * Print filtered sheet cells data as JSON Document, it will basicly be { "excel cell" : { "row": "row number", "val": "excel data" } }
 	 *
 	 */
 	function print_filter_data() {
@@ -222,9 +213,8 @@ class excel2JSON  {
 	
 	
 	/**
-	 * print sheet cells as JSON Document
-	 * 
-	 * it will basicly be { "excel cell":"excel data" }
+	 * Print Cells
+	 * print sheet cells as JSON Document, it will basicly be { "excel cell":"excel data" }
 	 * 
 	 */
 	function print_sheet_cells() {
@@ -233,9 +223,9 @@ class excel2JSON  {
 	}
 	
 	/**
-	 * filter cells 
-	 * returns filter data as an array
-	 *
+	 * Filter cells 
+	 * Returns filter data as an array
+	 * @return array
 	 */
 	function filter_cells() {
 		$filter=array();
@@ -244,9 +234,8 @@ class excel2JSON  {
 	}
 	
 	/**
-	 * print filtered sheet cells as JSON Document
-	 *
-	 * it will basicly be { "excel cell":"excel data" }
+	 * Print filtered cells
+	 * Print filtered sheet cells as JSON Document, it will basicly be { "excel cell":"excel data" }
 	 *
 	 */
 	function print_filter_cells() {
@@ -255,6 +244,7 @@ class excel2JSON  {
 	}
 	
 	/**
+	 * List Workbooks
 	 * print workbook sheet names as JSON Document
 	 *
 	 * it will basicly be [ "sheet name" ]
@@ -262,7 +252,10 @@ class excel2JSON  {
 	function print_sheets() { $this->json_out($this->excel_sheets['title']); }
 	
 	/**
-	 * open zip files such as excel xlsx or xlsm
+	 * Open Zip
+	 * Open files such as excel xlsx or xlsm
+	 * @param $zip excel doc
+	 * @return array
 	 */
 	private function zip_resorces($zip) {
 		if (! class_exists ( 'ZipArchive' )) die('ZipArchive class not found');
@@ -278,9 +271,10 @@ class excel2JSON  {
 	}
 	
 	/**
-	 * print out json document to browser/client
-	 *
-	 * @param string $data
+	 * Print JSON
+	 * 
+	 * Print out json document to browser/client
+	 * @param array $data array to convert to JSON 
 	 * @return string
 	 */
 	private function json_out($data) {
@@ -293,12 +287,13 @@ class excel2JSON  {
 	}
 	
 	/**
+	 * XSLT out
+	 * 
 	 * Apply xslt template to xml data
-	 * - you can send params to your xslt style sheet like this array('a' => 'a value', 'b' => 2);
 	 *
 	 * @param string $xsltmpl         	XSLT stylesheet to be applied to XML
 	 * @param string $xml_load      	XML data
-	 * @return string boolean void from transformed XML data or fail
+	 * @return string 
 	 */
 	private function xsl_out($xsltmpl, $xml_load) {
 		if (! class_exists ( 'DOMDocument' ))  die('DOMDocument class not found');
@@ -317,16 +312,15 @@ class excel2JSON  {
 /* XSLT TEMPLATES THAT WILL BE USED TO PARSE XML IN THE EXCEL ZIP FILE */
 	
 	/**
-	 * XSLT style for selecting cells on an excel work sheet
-	 *
-	 * XSLT param is called cell, it is alpha numeric, like A1 or ZY98 for an excel cell reference
-	 *
-	 * XML: <excel>/xl/worksheets/sheet*.xml, this file is in the generated list from GetWorkbooksList_xslt() and <excel>/xl/workbook.xml
-	 *
+	 * Select all cells
+	 * 
+	 * XSLT style for selecting all cells on an excel work sheet
+	 * XML: <excel>/xl/worksheets/sheet*.xml 
+	 * the xml file needed is sourced from the result from the output from the method bellow
+	 * @see excel2JSON::GetWorkbooksList_xslt()
 	 * @return string
 	 */
 	private function cellList_xslt() {
-		$cell='$cell';
 		return <<<X
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet 
@@ -352,12 +346,12 @@ X
 	}
 	
 	/**
-	 * XSLT style for searching for row passed by cellMatch for string values
+	 * XSLT style string lookup
 	 * 
-	 * XSLT param is called row, should be numeric
-	 * 
+	 * Search for string values by row value
+	 * XSLT param is called row, should be numeric, but can be overriden by passing a numeric paramater
 	 * XML: <excel>/xl/sharedStrings.xml
-	 * @param mixed $row row can be the default, or the number to look up.  this is a work around
+	 * @param string $row row can be the default, or the number to look up.  this is a work around
 	 * @return string
 	 */
 	private function StringLookup_xslt($row='$row') {
@@ -379,10 +373,11 @@ x
 	}
 	
 	/**
+	 * Get Workbooks
+	 * 
 	 * XSLT style for grabing a list of the excel worksheets
-	 * 
 	 * XML: <excel>/xl/workbook.xml
-	 * 
+	 * @param string $t true by default, otherwise false for all
 	 * @return string
 	 */
 	private function  GetWorkbooksList_xslt($t='true') {
@@ -420,3 +415,7 @@ x
 	}
 	
 }
+
+/* Demo file and sheets */
+$file='test.xlsx';
+$sheet='Filelist';
