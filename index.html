@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Excel2JSON by salamcast</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Excel2JSON</h1>
+        <h2>Excel2JSON is an Excel XML parser to JSON document</h2>
+        <a href="https://github.com/salamcast/excel2JSON" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>Excel2JSON is an Excel XML parser to JSON document</h1>
+
+<p>This class will allow you to use your excel workbook data in your Javascript/jQuery and other web applications. 
+It's really simple to use, you can instantiate the class with the excel file you want to read, the file must 
+be ooxml, normally with an xlsx or xlsm file extention MS Excel 2007</p>
+
+<h3>Won't work with excel (xls) docs exported with:</h3>
+
+<ul>
+<li>Apache Open office (excel 2003 XML save as clashes)</li>
+<li>Numbers </li>
+<li>Libre Office (excel 2003 XML save as clashes)</li>
+</ul><p>I made test.xlsx with Oxygen XML, and edited it with LibreOffice. it is the test excel file provided with this class</p>
+
+<hr><p>To see this class in action, view one of the test php docs on your webserver and view it's code</p>
+
+<hr><p>Note: if you get an error with the JSON output, set_excel with a second argument as seen bellow</p>
+
+<pre><code>$e-&gt;set_excel($file, 'false');
+</code></pre>
+
+<p>other wise use </p>
+
+<pre><code>$e-&gt;set_excel($file);
+</code></pre>
+
+<hr><p>value dump - test.php =&gt; dumps class values </p>
+
+<h3>Show how to use excel data without JSON print out</h3>
+
+<ul>
+<li>$e-&gt;filter_cells()</li>
+<li>$e-&gt;filter_data()</li>
+</ul><hr><h3>Sheets test - print_sheets.php =&gt; on by default if worksheet not found or set.</h3>
+
+<p>Prints out a JSON document of a list of excel workbook sheets</p>
+
+<pre><code>require_once 'excelMap.class.php';
+$e=new excel2JSON();
+//$e-&gt;set_excel($file);
+$e-&gt;set_excel($file, 'false');
+$e-&gt;print_sheets();
+</code></pre>
+
+<hr><h3>Data test - print_sheet_data.php</h3>
+
+<p>Prints out a JSON document of excel worksheet cell data in detail</p>
+
+<pre><code>require_once 'excelMap.class.php';
+$e=new excel2JSON();
+//$e-&gt;set_excel($file);
+$e-&gt;set_excel($file, 'false');
+$e-&gt;load_sheet($sheet);
+$e-&gt;load_sheet_data();
+$e-&gt;print_sheet_data();
+</code></pre>
+
+<hr><h3>Cell test - print_sheet_cells.php</h3>
+
+<p>Prints out a JSON document of excel worksheet cell and their values </p>
+
+<pre><code>require_once 'excelMap.class.php';
+$e=new excel2JSON();
+//$e-&gt;set_excel($file);
+$e-&gt;set_excel($file, 'false');
+$e-&gt;load_sheet($sheet);
+$e-&gt;load_sheet_data();
+$e-&gt;print_sheet_cells();
+</code></pre>
+
+<hr><h3>Rows test - print_sheet_rows.php</h3>
+
+<p>Prints out a JSON document of excel worksheet cell and values grouped into rows </p>
+
+<pre><code>require_once 'excelMap.class.php';
+$e=new excel2JSON();
+//$e-&gt;set_excel($file);
+$e-&gt;set_excel($file, 'false');
+$e-&gt;load_sheet($sheet);
+$e-&gt;load_sheet_data();
+$e-&gt;print_sheet_rows();
+</code></pre>
+
+<hr><h3>Data filter test - print_filter_data.php</h3>
+
+<p>Prints out a JSON document of excel worksheet cell data in detail, only cells added to cell list will be displayed</p>
+
+<pre><code>require_once 'excelMap.class.php';
+$e=new excel2JSON();
+//$e-&gt;set_excel($file);
+$e-&gt;set_excel($file, 'false');
+$e-&gt;load_sheet($sheet);
+$e-&gt;load_sheet_data();
+$e-&gt;add_cell_list('A1');
+$e-&gt;add_cell_list('A2');
+$e-&gt;add_cell_list('B2');
+$e-&gt;add_cell_list('A4');
+$e-&gt;add_cell_list('B4');
+$e-&gt;print_filter_data();
+</code></pre>
+
+<hr><h3>Cell filter test - print_filter_cells.php</h3>
+
+<p>Prints out a JSON document of excel worksheet cell and their values, only cells added to cell list will be displayed </p>
+
+<pre><code>require_once 'excelMap.class.php';
+$e=new excel2JSON();
+//$e-&gt;set_excel($file);
+$e-&gt;set_excel($file, 'false');
+$e-&gt;load_sheet($sheet);
+$e-&gt;load_sheet_data();
+$e-&gt;add_cell_list('A1');
+$e-&gt;add_cell_list('A2');
+$e-&gt;add_cell_list('B2');
+$e-&gt;add_cell_list('A4');
+$e-&gt;add_cell_list('B4');
+$e-&gt;print_filter_cells();
+</code></pre>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/salamcast/excel2JSON/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/salamcast/excel2JSON/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/salamcast/excel2JSON"></a> is maintained by <a href="https://github.com/salamcast">salamcast</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
