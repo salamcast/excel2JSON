@@ -2,8 +2,20 @@
 
 This class will allow you to use your excel workbook data in your Javascript/jQuery and other web applications. 
 It's really simple to use, you can instantiate the class with the excel file you want to read, the file must 
-be ooxml, normally with an xlsx or xlsm file extention MS Excel 2007
- 
+be ooxml, normally with an xlsx or xlsm file extention MS Excel 2007.
+
+I have done some work of updating the current class and added a configuration generator so that you can add name to cell
+mapping.  The configuration is in INI format and will be based on the Excel file name; eg test.xslt will make test.ini.
+The sheet name will be in the [] and each cell will be listed bellow
+
+    [SheetName]
+    A2="fname"
+    B2="lname"
+    ; commented out map
+    ;C2="mname"
+
+Check out the index.php to see the debug output
+
 ### Won't work with excel (xls) docs exported with:
  - Apache Open office (excel 2003 XML save as clashes)
  - Numbers 
