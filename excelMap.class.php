@@ -50,6 +50,7 @@ class excel2JSON  {
 	 * @var string $loaded_workbook
 	 */
 	private $loaded_workbook=FALSE;
+
 	
 	/**
 	 * Loaded Workbook data
@@ -58,12 +59,17 @@ class excel2JSON  {
 	 */
 	private $loaded_workbook_data=array();
 	
+	
+	function get_loaded_workbook_data() { return $this->loaded_workbook_data ;}
+	
 	/**
 	 * loaded Workbook data
 	 * 
 	 * @var array $loaded_workbook_cells
 	 */
 	private $loaded_workbook_cells=array();
+	
+	function get_loaded_workbook_cells() { return $this->loaded_workbook_cells ;}
 
 	/**
 	 * loaded Workbook data
@@ -71,6 +77,8 @@ class excel2JSON  {
 	 * @var array $loaded_workbook_rows
 	 */
 	private $loaded_workbook_rows=array();
+	
+	function get_loaded_workbook_rows () { return $this->loaded_workbook_rows ;}
 	
 	/**
 	 * Excel cell list
