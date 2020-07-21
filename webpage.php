@@ -5,6 +5,8 @@ require_once 'excelMap.class.php';
  */
 if (! is_file('config.ini')) require_once 'makeconfig.php';
 $ini=parse_ini_file('config.ini', TRUE);
+//setup excel cell filter
+
 $dir=dirname($_SERVER['SCRIPT_NAME']);
 $error=array();
 
@@ -36,7 +38,7 @@ h
  * @param unknown_type $check
  * @return string
  */
-function debug_data_table($title,$data,$check){
+function debug_data_table($title,$data=array(),$check=array()){
 	$tbl=<<<t
 			<div class="col-md-4 panel panel-default">
 				<div class="panel-heading">$title</div>
@@ -47,12 +49,17 @@ t
 	;
 	foreach ($data as $k => $v) {
 		$x="*";
-		if (array_key_exists($k, $check)) { $x=$check[$k];
-			$tbl.= <<<t
+		if (array_key_exists($k, $check)) {
+			$x = $check[$k];
+		} elseif (array_key_exists($v, $check)) {
+			$x = $check[$v];
+		}
+		if ($x != '*') {
+			$tbl .= <<<t
 							<tr><td>$k</td><td>$v</td><td>$x</td></tr>
 t
 			;
-		}		
+		}
 	}
 	$tbl.=<<<t
 					 	</table>
@@ -125,9 +132,9 @@ if ( array_key_exists('PATH_INFO', $_SERVER)) {
 <html>
 	<head>
 		<title>Excel2JSON Debug viewer webpage</title>
-	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="<?php echo $dir; ?>/dist/css/bootstrap.min.css">
-		<link rel="stylesheet" href="<?php echo $dir; ?>/dist/css/bootstrap-theme.min.css">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="<?php echo $dir; ?>/dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="<?php echo $dir; ?>/dist/css/bootstrap-theme.min.css" />
 		<script src="<?php echo $dir; ?>/dist/js/jquery.min.js"></script>
 		<script src="<?php echo $dir; ?>/dist/js/bootstrap.min.js"></script>
 	</head>
@@ -143,49 +150,31 @@ if (count($error) > 0){
 	$e->set_excel($file, 'false');
 	$e->load_sheet($sheet);
 	$e->load_sheet_data();
+	$e->load_config('config.ini', $path);
 
-//setup excel cell filter
-	$filter=array();
-	foreach ($ini[$path] as $k => $v) {
-		if ($k != 'sheet' || $k != 'file') {
-			$filter['s'][]='/\"'.$k.'\"/';
-			$filter['r'][]='"'.$v.'"';
-			$filter['data'][$k]=$v;
-			$e->add_cell_list($k);
-		}
-	}
-
-	//excel sheet data
-	$excel=$e->filter_cells();
 
 	$cells_title='Filtered Cells | excel2JSON::filter_cells()';
-	$cells=preg_replace($filter['s'], $filter['r'], json_encode($excel), 1);
+	$cells=json_encode($e->filter_cells());
 
 	$data_title='Filtered Data | excel2JSON::filter_data()';
-	$data=preg_replace($filter['s'], $filter['r'], json_encode($e->filter_data()));
+	$data=json_encode($e->filter_data());
 	
 	$cells2_title='All Cells | excel2JSON::get_loaded_workbook_cells()';
-	$cells2=preg_replace($filter['s'], $filter['r'], json_encode($e->get_loaded_workbook_cells()), 1);
+	$cells2=json_encode($e->get_loaded_workbook_cells());
 	
 	$data2_title='All Data | excel2JSON::get_loaded_workbook_data()';
-	$data2=preg_replace($filter['s'], $filter['r'], json_encode($e->get_loaded_workbook_data()));
+	$data2=json_encode($e->get_loaded_workbook_data());
 	
 	$rows_title='All Rows | excel2JSON::get_loaded_workbook_rows()';
-	$rows=preg_replace($filter['s'], $filter['r'], json_encode($e->get_loaded_workbook_rows()), 1);
+	$rows=json_encode($e->get_loaded_workbook_rows());
 	
 	//////////
 	?>
-			<div class="row">
-	<?php 
-	//JSON output from Excel2JSON class
-	echo debug_data_table('Filtered Cells View', $filter['data'], $excel);
-	echo debug_data_table('Workbook Data', $filter['data'], $e->get_loaded_workbook_cells());
-	?>
-			</div>
+
 			<div class="row">
 	<?php
-	echo debug_panel($cells_title, $cells);
-	echo debug_panel($data_title, $data);
+	if (count($e->filter_cells()) > 0) echo debug_panel($cells_title, $cells);
+	if (count($e->filter_data()) > 0) echo debug_panel($data_title, $data);
 	?>
 			</div>
 			<div class="row">

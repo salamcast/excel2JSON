@@ -3,8 +3,8 @@
  * Excel Map is a tool to parse and look up values from an excel sheet
  * @package excel2JSON
  * @license http://www.apache.org/licenses/LICENSE-2.0
- * @author Karl Holz
- * @version 1.0
+ * @author Abu Khadeejah Karl Holz
+ * @version 2.0
  */
 class excel2JSON  { 
 
@@ -36,7 +36,7 @@ class excel2JSON  {
 	 * excel shared Strings data
 	 * @var string $excel_strings
 	 */
-	private $excel_strings;
+	private $excel_strings='';
 	
 	/**
 	 * loaded excel file list
@@ -94,7 +94,7 @@ class excel2JSON  {
 	 * @return boolean
 	 */
 	function __construct($file='') {
-		if ($file != '') $this->set_excel($file);
+		if ($file != '') return $this->set_excel($file);
 		return TRUE;
 	}
 	
@@ -153,10 +153,12 @@ class excel2JSON  {
 							$val=$v['val']+1;
 							$s=$this->xsl_out($this->StringLookup_xslt( $val), $excel_strings);
 							$this->loaded_workbook_data[$k]['val']=$s;
-							$this->loaded_workbook_cells[$k]=$s;
-							$this->loaded_workbook_rows[$v['row']][$k]=$s;
 							// drop the 't' key off of the array, it's only needed for text look up
 							array_pop($this->loaded_workbook_data[$k]);
+							$this->loaded_workbook_data[$k]['cell']=$k;
+							$this->loaded_workbook_cells[$k]=$s;
+							$this->loaded_workbook_rows[$v['row']][$k]=$s;
+
 					 	}  else {
 					 		$this->loaded_workbook_cells[$k]=$v['val'];
 					 		$this->loaded_workbook_rows[$v['row']][$k]=$v['val'];
@@ -169,6 +171,49 @@ class excel2JSON  {
 		return FALSE;
 	}
 	
+	public $config_label=array();
+
+	function load_config($ini, $sec) {
+		if (! is_file($ini)) return FALSE;
+		$ini=parse_ini_file($ini, TRUE);
+//setup excel cell filter
+		$filter=array();
+
+		foreach ($ini[$sec] as $k => $v) {
+			if ($k != 'sheet' || $k != 'file') {
+//				$filter['s'][]='/\"'.$k.'\"/';
+//				$filter['r'][]='"'.$v.'"';
+				$filter['data'][$k]=$v;
+				$this->filter[] = $v;
+			}
+		}
+
+		$this->config_label=$filter['data'];
+
+		$cellsLoaded=array();
+		foreach ($this->loaded_workbook_cells as $k => $v) {
+			if (array_key_exists($k, $filter['data'])) {
+				$key=$filter['data'][$k];
+			} else {
+				$key=$k;
+			}
+			$cellsLoaded[$key]=$v;
+		}
+		$this->loaded_workbook_cells=$cellsLoaded;
+
+		$dataLoaded=array();
+		foreach($this->loaded_workbook_data as $k => $v) {
+			if (array_key_exists($k, $filter['data'])) {
+				$key=$filter['data'][$k];
+			} else {
+				$key=$k;
+			}
+			$dataLoaded[$key] = $v;
+		}
+		$this->loaded_workbook_data=$dataLoaded;
+
+		return TRUE;
+	}
 
 	/**
 	 * Cell List
@@ -204,7 +249,11 @@ class excel2JSON  {
 	 */
 	function filter_data() {
 		$filter=array();
-		foreach ($this->filter as $f) $filter[$f]=$this->loaded_workbook_data[$f];
+		foreach ($this->filter as $f)
+			if (array_key_exists($f, $this->loaded_workbook_data))
+				$filter[$f]=$this->loaded_workbook_data[$f];
+		//	else
+		//		$filter[$f]=$this->loaded_workbook_data[$f];
 		return $filter;
 	}
 	
@@ -237,7 +286,9 @@ class excel2JSON  {
 	 */
 	function filter_cells() {
 		$filter=array();
-		foreach ($this->filter as $f) $filter[$f]=$this->loaded_workbook_cells[$f];
+		foreach ($this->filter as $f)
+			if (array_key_exists($f, $this->loaded_workbook_cells))
+			$filter[$f]=$this->loaded_workbook_cells[$f];
 		return $filter;
 	}
 	
