@@ -25,18 +25,28 @@ foreach ($path as $p){
 	$excel=$e->get_loaded_workbook_cells();
 //	print_r($excel);
 	$ini.=<<<i
+<<<<<<< HEAD
 [/$p]
 file="$file"
 sheet="$p"
 
+=======
+[$p]
+>>>>>>> 8f4f2cc92a9e44e1db86f9518cc638864b8b70d0
 i
 ;
 	foreach ($excel as $k =>$v)	$ini.="$k=\"$k\"\n";
 }
 /**
+<<<<<<< HEAD
  * write configuration file as config.ini
  */
 file_put_contents('config.ini', $ini);
+=======
+ * write configuration file as test.ini
+ */
+file_put_contents(basename($file, '.xlsx') . '.ini', $ini);
+>>>>>>> 8f4f2cc92a9e44e1db86f9518cc638864b8b70d0
 /**
  * show newly made file
  */
