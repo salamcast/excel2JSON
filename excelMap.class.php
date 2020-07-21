@@ -85,6 +85,12 @@ class excel2JSON  {
 	 * @var array $filter
 	 */
 	private $filter=array();
+
+	/**
+	 * Custom Config label
+	 * @var array $filter_label
+	 */
+	private $filter_label=array();
 	
 	
 	/**
@@ -177,31 +183,30 @@ class excel2JSON  {
 		if (! is_file($ini)) return FALSE;
 		$ini=parse_ini_file($ini, TRUE);
 //setup excel cell filter
-		$filter=array();
-
 		foreach ($ini[$sec] as $k => $v) {
 			if ($k != 'sheet' || $k != 'file') {
 //				$filter['s'][]='/\"'.$k.'\"/';
 //				$filter['r'][]='"'.$v.'"';
-				$filter['data'][$k]=$v;
-				$this->filter[] = $v;
+				$this->config_label[$k]=$v;
+				$this->filter_label[] = $v;
+				$this->filter[] = $k;
 			}
 		}
 
-		$this->config_label=$filter['data'];
 
-		$cellsLoaded=array();
-		foreach ($this->loaded_workbook_cells as $k => $v) {
-			if (array_key_exists($k, $filter['data'])) {
-				$key=$filter['data'][$k];
-			} else {
-				$key=$k;
-			}
-			$cellsLoaded[$key]=$v;
-		}
-		$this->loaded_workbook_cells=$cellsLoaded;
 
-		$dataLoaded=array();
+//		$cellsLoaded=array();
+//		foreach ($this->filter as $k => $v) {
+//			if (array_key_exists($k, $this->loaded_workbook_cells)) {
+//				$key=$filter['data'][$k];
+//			} else {
+//				$key=$k;
+//			}
+//			$cellsLoaded[$key]=$v;
+//		}
+//		$this->loaded_workbook_cells=$cellsLoaded;
+
+		/*$dataLoaded=array();
 		foreach($this->loaded_workbook_data as $k => $v) {
 			if (array_key_exists($k, $filter['data'])) {
 				$key=$filter['data'][$k];
@@ -210,7 +215,7 @@ class excel2JSON  {
 			}
 			$dataLoaded[$key] = $v;
 		}
-		$this->loaded_workbook_data=$dataLoaded;
+		$this->loaded_workbook_data=$dataLoaded;*/
 
 		return TRUE;
 	}
@@ -249,11 +254,14 @@ class excel2JSON  {
 	 */
 	function filter_data() {
 		$filter=array();
-		foreach ($this->filter as $f)
+		foreach ($this->filter as $k => $f)
 			if (array_key_exists($f, $this->loaded_workbook_data))
-				$filter[$f]=$this->loaded_workbook_data[$f];
-		//	else
-		//		$filter[$f]=$this->loaded_workbook_data[$f];
+				if ($f != 'sheet')
+					if (count($this->filter_label) > 0)
+						$filter[$this->filter_label[$k]]=$this->loaded_workbook_data[$f];
+					else
+						$filter[$f]=$this->loaded_workbook_data[$f];
+
 		return $filter;
 	}
 	
@@ -286,10 +294,15 @@ class excel2JSON  {
 	 */
 	function filter_cells() {
 		$filter=array();
-		foreach ($this->filter as $f)
+		foreach ($this->filter as $k => $f)
 			if (array_key_exists($f, $this->loaded_workbook_cells))
-			$filter[$f]=$this->loaded_workbook_cells[$f];
+				if (count($this->filter_label) > 0)
+					$filter[$this->filter_label[$k]]=$this->loaded_workbook_cells[$f];
+				else
+					$filter[$f]=$this->loaded_workbook_cells[$f];
+
 		return $filter;
+		
 	}
 	
 	/**
